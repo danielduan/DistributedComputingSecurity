@@ -723,7 +723,7 @@ Task 3 part 1 keep sending stuff
 		}
 	} else { //attack!
 		while(1) {
-			osp2p_writef(t->peer_fd, "IHateThisLab");
+			osp2p_writef(t->peer_fd, "ATTACKED");
 		}
 	}
 
@@ -845,6 +845,8 @@ Task 3 part 2 download weird files
 			} else if (pid == 0) {
 				task_download(t, tracker_task);
 				_exit(0);
+			} else if(pid > 0){
+				task_free(t);
 			}
 		}
 	}
@@ -862,6 +864,8 @@ Task 1 part 2 Parallel uploads
 		} else if (pid == 0) {
 			task_upload(t);
 			_exit(0);
+		} else if(pid > 0){
+			task_free(t);
 		}
 	}
 
