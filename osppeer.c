@@ -28,6 +28,12 @@ int evil_mode;			// nonzero iff this peer should behave badly
 static struct in_addr listen_addr;	// Define listening endpoint
 static int listen_port;
 
+/************************************
+Task 2 part 2 File size limit
+*************************************/
+#define MAXIMUM_FILE_SIZE 1000000000
+// should be big enough
+
 
 /*****************************************************************************
  * TASK STRUCTURE
@@ -567,6 +573,15 @@ static void task_download(task_t *t, task_t *tracker_task)
 		ret = write_from_taskbuf(t->disk_fd, t);
 		if (ret == TBUF_ERROR) {
 			error("* Disk write error");
+			goto try_again;
+		}
+
+/************************************
+Task 2 part 2 File size limit
+*************************************/
+
+		if (t->total_written > MAXIMUM_FILE_SIZE) {
+			error("PROBLEM DOWNLOADING, DATA SIZE EXCEEDED");
 			goto try_again;
 		}
 	}
