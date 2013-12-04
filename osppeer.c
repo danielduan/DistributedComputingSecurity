@@ -635,7 +635,7 @@ static task_t *task_listen(task_t *listen_task)
 //	First reads the request into the task buffer, then serves the peer
 //	the requested file.
 static void task_upload(task_t *t)
-{
+{ 
 	assert(t->type == TASK_UPLOAD);
 	// First, read the request from the peer.
 	while (1) {
@@ -646,6 +646,26 @@ static void task_upload(task_t *t)
 		} else if (ret == TBUF_END
 			   || (t->tail && t->buf[t->tail-1] == '\n'))
 			break;
+	}
+
+	/***********************************************
+	EXERCISE 2B: ROBUSTNESS, BLOCK OTHER DIRECTORIES
+	************************************************/
+
+	//If filename size is too long, this is an error
+	if(strlen(t->buf) > FILENAMESIZ + 12 || strlen(t->filename) > FILENAMESIZ){
+		error("PEER PASSED IN FILENAME THAT WAS TOO LONG \n");
+		goto exit;
+	}
+
+	//Search for a '/', because if there is a '/', we are trying to access something
+	//That's not in the right directory
+	int i;
+	if(i = 0; i < FILENAMESIZ && t->filename[i] != '\0'; i++){
+		if(t->filename[i] == '/'){
+			error("Tried to access a file from an invalid directory");
+			goto exit;
+		}
 	}
 
 	assert(t->head == 0);
