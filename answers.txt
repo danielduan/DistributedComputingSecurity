@@ -37,6 +37,11 @@ specify the size, we could restrict the filename size to FILENAMESIZ.
 # EXERCISE 2B: What other robustness problems did you fix?  (~1-3 sentences
 #    each)
 
+1. We found that the peers can send endless data when it receives a request from a peer.
+We added a maximum file size to stop downloading at and restarting the file session.
+The current limit is set at ~1GB and is adjustable in the #define section at the
+beginning of the file.
+
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
 
