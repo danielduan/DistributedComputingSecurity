@@ -41,7 +41,11 @@ Task 2 part 2 File size limit
  * a bounded buffer that simplifies reading from and writing to peers.
  */
 
-#define TASKBUFSIZ	4096	// Size of task_t::buf
+/************************************
+Task 2 part 2 task buffer size limit
+*************************************/
+
+#define TASKBUFSIZ	51200	// Size of task_t::buf
 #define FILENAMESIZ	256	// Size of task_t::filename
 
 typedef enum tasktype {		// Which type of connection is this?

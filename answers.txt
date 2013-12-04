@@ -42,6 +42,9 @@ We added a maximum file size to stop downloading at and restarting the file sess
 The current limit is set at ~1GB and is adjustable in the #define section at the
 beginning of the file.
 
+2. We found that the task buffer would fill up before actual file transfer is completed.
+Instead of dynamically resizing, we decided on an optimal number of 52800. 
+
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
 
