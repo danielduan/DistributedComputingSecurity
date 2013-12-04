@@ -680,7 +680,7 @@ static void task_upload(task_t *t)
 	//Search for a '/', because if there is a '/', we are trying to access something
 	//That's not in the right directory
 	int i;
-	if(i = 0; i < FILENAMESIZ && t->filename[i] != '\0'; i++){
+	for(i = 0; (i < FILENAMESIZ && t->filename[i] != '\0'); i++){
 		if(t->filename[i] == '/'){
 			error("Tried to access a file from an invalid directory");
 			goto exit;
@@ -722,7 +722,7 @@ Task 3 part 1 keep sending stuff
 				break;
 		}
 	} else { //attack!
-		while(true) {
+		while(1) {
 			osp2p_writef(t->peer_fd, "IHateThisLab");
 		}
 	}
