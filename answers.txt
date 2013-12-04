@@ -43,12 +43,19 @@ size to FILENAMESIZ.
 # EXERCISE 2B: What other robustness problems did you fix?  (~1-3 sentences
 #    each)
 
-1. Block invalid directories
-	We fixed a problem with an attacker possibly trying to access directories that
-	aren't the current directory. We did this by checking the filename, and if the filename
-	had a '/' character, then we knew it was trying to access some other directory. Therefore,
-	we would report an error if that would happen and exit. 
-	
+1. We found that the peers can send endless data when it receives a request from a peer.
+We added a maximum file size to stop downloading at and restarting the file session.
+The current limit is set at ~1GB and is adjustable in the #define section at the
+beginning of the file.
+
+2. We found that the task buffer would fill up before actual file transfer is completed.
+Instead of dynamically resizing, we decided on an optimal number of 52800. 
+
+3. We fixed a problem with an attacker possibly trying to access directories that
+aren't the current directory. We did this by checking the filename, and if the filename
+had a '/' character, then we knew it was trying to access some other directory. Therefore,
+we would report an error if that would happen and exit. 
+
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
 
