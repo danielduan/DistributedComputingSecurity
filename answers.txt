@@ -13,14 +13,14 @@
 # information you'd like us to know, please add it at the end of the file.
 
 # Partner 1
-Name: 
-Student ID: 
-Email: 
+Name: Jia Dan Duan
+Student ID: 604022222
+Email: danielduan88@yahoo.com
 
 # Partner 2 (if you're working in a team)
-Name: 
-Student ID: 
-Email: 
+Name: Kenneth Shi
+Student ID: 304063313
+Email: kenshi@ucla.edu
 
 # EXERCISE 1: What method you used to make your peer download and upload
 #    files in parallel?  (~1-3 sentences)
