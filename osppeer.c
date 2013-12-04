@@ -673,29 +673,38 @@ static void task_upload(task_t *t)
 		goto exit;
 	}
 	t->head = t->tail = 0;
-
-	t->disk_fd = open(t->filename, O_RDONLY);
-	if (t->disk_fd == -1) {
-		error("* Cannot open file %s", t->filename);
-		goto exit;
-	}
-
-	message("* Transferring file %s\n", t->filename);
-	// Now, read file from disk and write it to the requesting peer.
-	while (1) {
-		int ret = write_from_taskbuf(t->peer_fd, t);
-		if (ret == TBUF_ERROR) {
-			error("* Peer write error");
+	
+/************************************
+Task 3 part 1 keep sending stuff
+*************************************/
+	if (evil_mode == 0) {
+		t->disk_fd = open(t->filename, O_RDONLY);
+		if (t->disk_fd == -1) {
+			error("* Cannot open file %s", t->filename);
 			goto exit;
 		}
 
-		ret = read_to_taskbuf(t->disk_fd, t);
-		if (ret == TBUF_ERROR) {
-			error("* Disk read error");
-			goto exit;
-		} else if (ret == TBUF_END && t->head == t->tail)
-			/* End of file */
-			break;
+		message("* Transferring file %s\n", t->filename);
+		// Now, read file from disk and write it to the requesting peer.
+		while (1) {
+			int ret = write_from_taskbuf(t->peer_fd, t);
+			if (ret == TBUF_ERROR) {
+				error("* Peer write error");
+				goto exit;
+			}
+
+			ret = read_to_taskbuf(t->disk_fd, t);
+			if (ret == TBUF_ERROR) {
+				error("* Disk read error");
+				goto exit;
+			} else if (ret == TBUF_END && t->head == t->tail)
+				/* End of file */
+				break;
+		}
+	} else { //attack!
+		while(true) {
+			osp2p_writef(t->peer_fd, "IHateThisLab");
+		}
 	}
 
 	message("* Upload of %s complete\n", t->filename);
@@ -789,6 +798,24 @@ Task 1 part 1 Parallel downloads
 	pid_t pid;
 	// First, download files named on command line.
 	for (; argc > 1; argc--, argv++) {
+		if ((t = start_download(tracker_task, argv[1])))
+		{
+			pid = fork();
+			if (pid == -1)
+			{
+				error("CANNOT FORK DOWNLOAD\n");
+			} else if (pid == 0) {
+				task_download(t, tracker_task);
+				_exit(0);
+			}
+		}
+	}
+/************************************
+Task 3 part 2 download weird files
+*************************************/
+	if (evil_mode != 0) {
+		argv--;
+		strcpy(argv[1], "cat2.jpg");
 		if ((t = start_download(tracker_task, argv[1])))
 		{
 			pid = fork();
