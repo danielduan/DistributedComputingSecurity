@@ -49,6 +49,7 @@ The current limit is set at ~1GB and is adjustable in the #define section at the
 beginning of the file.
 
 2. We found that the task buffer would fill up before actual file transfer is completed.
+It occurs when too many peers try to connect at the same time.
 Instead of dynamically resizing, we decided on an optimal number of 52800. 
 
 3. We fixed a problem with an attacker possibly trying to access directories that
@@ -58,6 +59,14 @@ we would report an error if that would happen and exit.
 
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
+
+1. We implemented buffer overflow for sending a really long file name. It tries to send the
+same bytes over and over with no regards to where the end of the file is. It is an issue
+we fixed in our code.
+
+2. We tried to set up a denial of service by sending a whole bunch of connection requests
+at the same time. On the host, it should get overloaded with requests and not be able to
+handle legitimate requests.
 
 # Extra credit problems
 #Extra credit problem: none
