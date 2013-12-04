@@ -679,12 +679,26 @@ static void task_upload(task_t *t)
 
 	//Search for a '/', because if there is a '/', we are trying to access something
 	//That's not in the right directory
+	if(t->filename[0] == '/' || t->filename[0] == '.'){
+		message("Starts with bad token\n");
+		error("Tried to access another directory\n");
+		goto exit;
+	}
 	int i;
-	for(i = 0; (i < FILENAMESIZ && t->filename[i] != '\0'); i++){
+	for(i = 0; i < FILENAMESIZ; i++){
+		if(t->filename[i] == '\0')
+			break;
 		if(t->filename[i] == '/'){
-			error("Tried to access a file from an invalid directory");
+			error("Tried to access a file from an invalid directory\n");
 			goto exit;
 		}
+	}
+
+	if(strstr(t->filename,"..") || strstr(t->filename,"../") || strstr(t->filename,"/")
+	   || strstr(t->filename,"\\/"))
+	{
+		error("Bad directory\n");
+		goto exit;
 	}
 
 	assert(t->head == 0);
