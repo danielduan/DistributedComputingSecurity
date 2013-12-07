@@ -20,6 +20,8 @@
  * which are in osp2p.h.
  */
 
+int convert_rot64(char* s, size_t len);
+
 static char *http_quote(const char *s)
 {
 	char *os, *x;
@@ -133,6 +135,9 @@ int osp2p_writef(int fd, const char *format, ...)
 
 	// now write it
 	pos = 0;
+	if (convert_rot64(buf, len) != 0) {
+		goto exit;
+	}
 	while (pos < len) {
 		ssize_t amt = write(fd, &buf[pos], len - pos);
 		if (amt == -1 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
@@ -237,11 +242,21 @@ int osp2p_vsnscanf(const char *s, size_t len, const char *format, va_list val)
 }
 
 
+int convert_rot64(char* s, size_t len) {
+	int i;
+	for (i = 0; i < (int)len; i++) {
+		s[i] = 127 - s[i];
+	}
 
-int osp2p_snscanf(const char *s, size_t len, const char *format, ...)
+	return 0;
+}
+
+
+int osp2p_snscanf(char *s, size_t len, const char *format, ...)
 {
 	int ret;
-
+	
+	convert_rot64(s, len);
 	va_list val;
 	va_start(val, format);
 	ret = osp2p_vsnscanf(s, len, format, val);
@@ -252,13 +267,14 @@ int osp2p_snscanf(const char *s, size_t len, const char *format, ...)
 
 
 
-int osp2p_sscanf(const char *s, const char *format, ...)
+int osp2p_sscanf(char *s, const char *format, ...)
 {
 	int ret;
-
+	
 	va_list val;
 	va_start(val, format);
 	ret = osp2p_vsnscanf(s, strlen(s), format, val);
+	//convert_rot64(s, strlen(s));
 	va_end(val);
 
 	return ret;

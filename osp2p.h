@@ -90,13 +90,13 @@ int osp2p_writef(int fd, const char *format, ...);
 //                 stores " " in buf (the '%20' was unquoted)
 //                 stores 1.0.0.2 in ina
 //                 stores 4 in port
-int osp2p_sscanf(const char *str, const char *format, ...);
+int osp2p_sscanf(char *str, const char *format, ...);
 
 
 // osp2p_snscanf(str, format, ...)
 //	Read from 'str' a message formatted according to 'format',
 //	like osp2p_sscanf.  However, 'str' is NOT null-terminated; it is
 //      exactly 'len' characters long.
-int osp2p_snscanf(const char *str, size_t len, const char *format, ...);
+int osp2p_snscanf(char *str, size_t len, const char *format, ...);
 
 #endif
